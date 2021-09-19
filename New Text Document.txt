@@ -1,0 +1,80 @@
+{
+                        Console.WriteLine("Welcome to StormFN!");
+                        Console.WriteLine("Fortnite will now launch!");
+
+                        String TempPath = System.IO.Path.GetTempPath();
+                        var Path1 = "";
+                        var version = "";
+
+                        var path1 = File.ReadAllText(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Epic\\UnrealEngineLauncher\\LauncherInstalled.dat"));
+                        dynamic Json = JsonConvert.DeserializeObject(path1);
+
+                        foreach (var installion in Json.InstallationList)
+                        {
+                            if (installion.AppName == "Fortnite")
+                            {
+                                Path1 = installion.InstallLocation.ToString() + "\\FortniteGame\\Binaries\\Win64";
+                                version = installion.AppVersion.ToString().Split('-')[1];
+                            }
+                        }
+
+                        if (!File.Exists(Path1 + "\\FortniteClient-Win64-Shipping_EAC.old")) { }
+                        else
+                        {
+                            File.Move(Path1 + "\\FortniteClient-Win64-Shipping_EAC.exe", Path1 + "\\FortniteClient-Win64-Shipping_EAC.exe.old");
+                        }
+
+                        if (!File.Exists(Path1 + "\\FortniteClient-Win64-Shipping_BE.old")) { }
+                        else
+                        {
+                            File.Move(Path1 + "\\FortniteClient-Win64-Shipping_BE.exe", Path1 + "\\FortniteClient-Win64-Shipping_BE.exe.old");
+                        }
+
+                        WebClient webClient = new WebClient();
+                        webClient.DownloadFile("https://cdn.discordapp.com/attachments/837806167420960839/838199076696358962/FortniteClient-Win64-Shipping_EAC.exe", TempPath + "\\FortniteClient-Win64-Shipping_EAC.exe");
+                        webClient.DownloadFile("https://cdn.discordapp.com/attachments/837806167420960839/838199069540614184/FortniteClient-Win64-Shipping_BE.exe", TempPath + "\\FortniteClient-Win64-Shipping_BE.exe");
+                        webClient.DownloadFile("https://cdn.discordapp.com/attachments/837806167420960839/839662864763060244/Aurora.Runtime.dll", TempPath + "\\Aurora.Runtime.dll");
+
+                        if (!File.Exists(Path1 + "\\FortniteClient-Win64-Shipping_EAC.exe"))
+                        {
+                            File.Move(TempPath + "\\FortniteClient-Win64-Shipping_EAC.exe", Path1 + "\\FortniteClient-Win64-Shipping_EAC.exe");
+                        }
+                        else
+                        {
+                            File.Delete(Path1 + "\\FortniteClient-Win64-Shipping_EAC.exe");
+                            File.Move(TempPath + "\\FortniteClient-Win64-Shipping_EAC.exe", Path1 + "\\FortniteClient-Win64-Shipping_EAC.exe");
+                        }
+
+                        if (!File.Exists(Path1 + "\\FortniteClient-Win64-Shipping_BE.exe"))
+                        {
+                            File.Move(TempPath + "\\FortniteClient-Win64-Shipping_BE.exe", Path1 + "\\FortniteClient-Win64-Shipping_BE.exe");
+                        }
+                        else
+                        {
+                            File.Delete(Path1 + "\\FortniteClient-Win64-Shipping_BE.exe");
+                            File.Move(TempPath + "\\FortniteClient-Win64-Shipping_BE.exe", Path1 + "\\FortniteClient-Win64-Shipping_BE.exe");
+                        }
+
+                        if (!File.Exists(Path1 + "\\Aurora.Runtime.dll"))
+                        {
+                            File.Move(TempPath + "\\Aurora.Runtime.dll", Path1 + "\\Aurora.Runtime.dll");
+                        }
+                        else
+                        {
+                            File.Delete(Path1 + "\\Aurora.Runtime.dll");
+                            File.Move(TempPath + "\\Aurora.Runtime.dll", Path1 + "\\Aurora.Runtime.dll");
+                        }
+
+                        var Process = System.Diagnostics.Process.Start(Path1 + "\\FortniteLauncher.exe");
+
+                        Console.WriteLine("Launched Fortnite Season: " + version);
+                        Console.ReadLine();
+
+                        while (true)
+                        {
+                            if (Process.HasExited == true)
+                                Environment.Exit(0);
+                        }
+                    }
+                }
+            }
